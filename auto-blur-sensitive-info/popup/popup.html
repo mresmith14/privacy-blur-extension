@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto Blur Sensitive Info</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 320px;
+      min-height: 400px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+    }
+
+    .container {
+      background: white;
+      margin: 8px;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 24px;
+    }
+
+    .header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+
+    .header p {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .toggle-section {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .main-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .main-toggle span {
+      font-weight: 600;
+      font-size: 14px;
+      color: #1a1a2e;
+    }
+
+    /* Toggle Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .3s;
+      border-radius: 28px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    input:checked + .slider {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+
+    .options-section {
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      padding-left: 4px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      transition: all 0.2s;
+    }
+
+    .option-item:hover {
+      background: #e9ecef;
+    }
+
+    .option-item.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .option-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .option-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .option-icon.email { background: #dbeafe; }
+    .option-icon.phone { background: #dcfce7; }
+    .option-icon.password { background: #fee2e2; }
+    .option-icon.creditcard { background: #fef3c7; }
+
+    .option-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .option-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+
+    .option-desc {
+      font-size: 11px;
+      color: #666;
+    }
+
+    .checkbox-wrapper {
+      position: relative;
+    }
+
+    .checkbox-wrapper input {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: #667eea;
+    }
+
+    .stats-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      padding: 16px;
+      color: white;
+      margin-bottom: 16px;
+    }
+
+    .stats-title {
+      font-size: 11px;
+      opacity: 0.9;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 20px;
+      font-weight: 700;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      opacity: 0.9;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #f8f9fa;
+      color: #666;
+    }
+
+    .btn-secondary:hover {
+      background: #e9ecef;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      margin-top: 12px;
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 12px;
+    }
+
+    .status-indicator.active {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-indicator.inactive {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">🔒</div>
+      <h1>Auto Blur Sensitive Info</h1>
+      <p>Protect your privacy while browsing</p>
+    </div>
+
+    <div class="toggle-section">
+      <div class="main-toggle">
+        <span>Extension Active</span>
+        <label class="switch">
+          <input type="checkbox" id="mainToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="options-section">
+      <div class="section-title">Blur Options</div>
+
+      <div class="option-item" id="emailOption">
+        <div class="option-info">
+          <div class="option-icon email">📧</div>
+          <div class="option-text">
+            <span class="option-label">Email Addresses</span>
+            <span class="option-desc">Blur all email formats</span>
+          </div>
+        </div>
+        <div class="checkbox-wrapper">
+          <input type="checkbox" id="blurEmail" checked>
+        </div>
+      </div>
+
+      <div class="option-item" id="phoneOption">
+        <div class="option-info">
+          <div class="option-icon phone">📱</div>
+          <div class="option-text">
+            <span class="option-label">Phone Numbers</span>
+            <span class="option-desc">US & international formats</span>
+          </div>
+        </div>
+        <div class="checkbox-wrapper">
+          <input type="checkbox" id="blurPhone" checked>
+        </div>
+      </div>
+
+      <div class="option-item" id="passwordOption">
+        <div class="option-info">
+          <div class="option-icon password">🔐</div>
+          <div class="option-text">
+            <span class="option-label">Password Fields</span>
+            <span class="option-desc">Extra blur for passwords</span>
+          </div>
+        </div>
+        <div class="checkbox-wrapper">
+          <input type="checkbox" id="blurPassword" checked>
+        </div>
+      </div>
+
+      <div class="option-item" id="creditCardOption">
+        <div class="option-info">
+          <div class="option-icon creditcard">💳</div>
+          <div class="option-text">
+            <span class="option-label">Credit Cards</span>
+            <span class="option-desc">Detect card numbers</span>
+          </div>
+        </div>
+        <div class="checkbox-wrapper">
+          <input type="checkbox" id="blurCreditCard">
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-section">
+      <div class="stats-title">Protection Stats</div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-number" id="emailCount">0</span>
+          <span class="stat-label">Emails</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="phoneCount">0</span>
+          <span class="stat-label">Phones</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="passwordCount">0</span>
+          <span class="stat-label">Passwords</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="scanNow">🔍 Scan Now</button>
+      <button class="btn btn-secondary" id="resetAll">↺ Reset</button>
+    </div>
+
+    <div class="status-indicator active" id="statusIndicator">
+      <span class="pulse"></span>
+      <span id="statusText">Protection Active</span>
+    </div>
+
+    <div class="footer">
+      Hover over blurred text to reveal temporarily
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

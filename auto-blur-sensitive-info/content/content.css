@@ -1,0 +1,140 @@
+/* Auto Blur Sensitive Info - Content Styles */
+
+/* Base blur effect for sensitive data */
+.auto-blur-sensitive {
+  filter: blur(8px) !important;
+  transition: filter 0.2s ease !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+/* Hover to temporarily reveal */
+.auto-blur-sensitive:hover {
+  filter: blur(0px) !important;
+}
+
+/* Focus state for accessibility */
+.auto-blur-sensitive:focus {
+  filter: blur(0px) !important;
+  outline: 2px solid #4f46e5 !important;
+  outline-offset: 2px !important;
+}
+
+/* Password fields specific styling */
+.auto-blur-sensitive[data-type="password"] {
+  filter: blur(12px) !important;
+}
+
+.auto-blur-sensitive[data-type="password"]:hover,
+.auto-blur-sensitive[data-type="password"]:focus {
+  filter: blur(0px) !important;
+}
+
+/* Email specific styling */
+.auto-blur-sensitive[data-type="email"] {
+  filter: blur(6px) !important;
+}
+
+/* Phone number specific styling */
+.auto-blur-sensitive[data-type="phone"] {
+  filter: blur(6px) !important;
+}
+
+/* Visual indicator that content is blurred */
+.auto-blur-sensitive::before {
+  content: "🔒";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 10000;
+}
+
+.auto-blur-sensitive:hover::before {
+  opacity: 0;
+}
+
+/* Ensure proper positioning context */
+.auto-blur-sensitive {
+  position: relative !important;
+  display: inline-block !important;
+}
+
+/* Override for input fields */
+input.auto-blur-sensitive,
+textarea.auto-blur-sensitive {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  color: transparent !important;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8) !important;
+}
+
+input.auto-blur-sensitive:hover,
+input.auto-blur-sensitive:focus,
+textarea.auto-blur-sensitive:hover,
+textarea.auto-blur-sensitive:focus {
+  color: inherit !important;
+  text-shadow: none !important;
+}
+
+/* Badge indicator for blurred elements */
+.auto-blur-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  pointer-events: none;
+  z-index: 10001;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Animation for newly detected elements */
+@keyframes blurFadeIn {
+  from {
+    filter: blur(0px);
+  }
+  to {
+    filter: blur(8px);
+  }
+}
+
+.auto-blur-sensitive.auto-blur-new {
+  animation: blurFadeIn 0.3s ease forwards;
+}
+
+/* Print styles - always show when printing */
+@media print {
+  .auto-blur-sensitive {
+    filter: none !important;
+    color: inherit !important;
+    text-shadow: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .auto-blur-sensitive {
+    filter: blur(4px) !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .auto-blur-sensitive {
+    transition: none !important;
+  }
+
+  .auto-blur-sensitive.auto-blur-new {
+    animation: none !important;
+  }
+}
