@@ -10,7 +10,12 @@ A Chrome extension that automatically detects and blurs sensitive information (e
 - **🎨 Customizable**: Toggle different types of sensitive data on/off
 - **♿ Accessible**: Keyboard navigation and screen reader friendly
 - **🔒 Privacy First**: All processing happens locally - no data is sent to any server
+
+
 ![Extension Preview](/preview.png)
+
+
+
 ## Installation
 
 ### Method 1: Load Unpacked (Developer Mode)
